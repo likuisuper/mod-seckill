@@ -21,6 +21,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <!--lombok依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.cxylk</groupId>
+            <artifactId>util</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.cxylk</groupId>
             <artifactId>dao</artifactId>

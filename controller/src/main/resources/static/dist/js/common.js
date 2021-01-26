@@ -3,7 +3,7 @@ function g_showLoading(){
     var idx = layer.msg('处理中...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: '0px', time:100000}) ;
     return idx;
 }
-//salt
+//salt,需要与后端salt一致
 var g_passsword_salt="1a2b3c4d";
 // 获取url参数
 function g_getQueryString(name) {

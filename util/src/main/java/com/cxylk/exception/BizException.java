@@ -1,5 +1,6 @@
 package com.cxylk.exception;
 
+import com.cxylk.response.ResultCode;
 import com.cxylk.util.ComUtil;
 import com.cxylk.util.MessageUtil;
 import lombok.*;
@@ -16,23 +17,19 @@ import org.springframework.util.StringUtils;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Accessors(chain = true)
-public class BizException extends Exception {
-    @NonNull
-    private String code;
+@ToString
+public class BizException extends RuntimeException {
+    private static final long servialVersionUID = 1L;
 
-    @NonNull
-    private String errMsg;
+    private ResultCode resultCode;
 
-    private Object[] params;
-
-    @Override
-    public String getMessage() {
-        String message=null;
-        if(!ComUtil.isEmpty(errMsg)){
-            MessageUtil.getMessage(errMsg,params);
-        }
-        return message;
-    }
+//    @Override
+//    public String getMessage() {
+//        String message=null;
+//        if(!ComUtil.isEmpty(errMsg)){
+//            message=MessageUtil.getMessage(errMsg,params);
+//        }
+//        return message;
+//    }
 }

@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录入口</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" th:href="@{/dist/css/ionicons.min.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/ionicons.min.css}"/>
     <!-- Theme style -->
-    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
-
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}"/>
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/plugins/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!--&lt;!&ndash; sweetalert &ndash;&gt;-->
+    <!--<script type="text/javascript" th:src="@{/plugins/sweetalert/sweetalert.min.js}"></script>-->
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/plugins/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/static/dist/js/plugins/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/dist/js/common.js}"></script>
     <style>
         canvas {
             display: block;
@@ -32,20 +45,20 @@
 <div id="particles">
 </div>
 <div class="login-box">
-    <div class="login-logo" style="color: #1baeae;">
+    <div class="login-logo" style="color: #382124;">
         <h1>登录入口</h1>
     </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
             <p class="login-box-msg"> Seckill , Let's Go !</p>
-            <form th:action="@{/admin/login}" method="post">
+            <form name="loginForm" id="loginForm" method="post">
 <!--                <div th:if="${not #strings.isEmpty(session.errorMsg)}" class="form-group">-->
 <!--                    <div class="alert alert-danger" th:text="${session.errorMsg}"></div>-->
 <!--                </div>-->
                 <div class="form-group has-feedback">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input type="text" id="userName" name="userName" class="form-control" placeholder="请输入账号"
+                    <input type="text" id="mobile" name="mobile" class="form-control" placeholder="请输入账号"
                            required="true">
                 </div>
                 <div class="form-group has-feedback">
@@ -70,34 +83,58 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-float">登录
+                        <button type="submit" class="btn btn-primary btn-block btn-float" onclick="login()">登录
                         </button>
                     </div>
                 </div>
             </form>
-
         </div>
         <!-- /.login-card-body -->
     </div>
 </div>
-
-
-<!-- jquery -->
-<script type="text/javascript" th:src="@{/plugins/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<!-- jquery-validator -->
-<script type="text/javascript" th:src="@{/plugins/jquery-validation/jquery.validate.min.js}"></script>
-<script type="text/javascript" th:src="@{/plugins/jquery-validation/localization/messages_zh.min.js}"></script>
-<!--&lt;!&ndash; sweetalert &ndash;&gt;-->
-<!--<script type="text/javascript" th:src="@{/plugins/sweetalert/sweetalert.min.js}"></script>-->
-<!-- layer -->
-<script type="text/javascript" th:src="@{/plugins/layer/layer.js}"></script>
-<!-- md5.js -->
-<script type="text/javascript" th:src="@{/static/dist/js/plugins/md5.min.js}"></script>
-<!-- common.js -->
-<script type="text/javascript" th:src="@{/dist/js/common.js}"></script>
+</body>
+<script>
+    function login() {
+        $("#loginForm").validate({
+            submitHandler:function(form){
+                doLogin();
+            }
+        });
+    }
+    function doLogin() {
+        // 加载中
+        g_showLoading();
+        let mobile=$("#mobile").val();
+        let salt=g_passsword_salt;
+        let inputPass=$("#password").val();
+        //规则必须与后端定义的加密规制一致
+        let passStr="" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
+        //md5加密，如果绕过前端，比如使用swagger,那么加密是没有效果的
+        let password=md5(passStr);
+        console.log("加密密码:"+password);
+        $.ajax({
+            url: "/user/login",
+            type: "POST",
+            data: {
+                mobile: mobile,
+                password: password
+            },
+            success: function (data) {
+                console.log(111);
+                layer.closeAll();
+                if (data.code == 200) {
+                    layer.msg("成功");
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                layer.closeAll();
+            }
+        });
+    }
+</script>
 <!--粒子背景-->
 <script type="text/javascript" th:src="@{/dist/js/plugins/particles.js}"></script>
 <script type="text/javascript" th:src="@{/dist/js/plugins/login-bg-particles.js}"></script>
-</body>
 </html>

@@ -59,4 +59,9 @@ public class MD5Util {
         return formPassToDB(formPass, saltDB);
     }
 
+    public static void main(String[] args) {
+        System.out.println(formPassToDB("83633463e1cd3b49da4ca974c0d3b3eb","1a2b3c4d"));
+        System.out.println(inputPassToDB("lk1998","1a2b3c4d"));
+    }
+
 }

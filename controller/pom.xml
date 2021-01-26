@@ -39,6 +39,12 @@
             <artifactId>serviceImpl</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--lombok依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.cxylk</groupId>
             <artifactId>redis</artifactId>

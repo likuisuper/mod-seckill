@@ -1,11 +1,9 @@
 package com.cxylk.controller;
 
 import com.cxylk.biz.UserService;
-import com.cxylk.exception.BizException;
 import com.cxylk.po.User;
 import com.cxylk.response.Response;
 import com.cxylk.response.ResponseResult;
-import com.cxylk.response.ResultCode;
 import com.cxylk.service.RedisService;
 import com.cxylk.service.impl.UserKey;
 import io.swagger.annotations.Api;

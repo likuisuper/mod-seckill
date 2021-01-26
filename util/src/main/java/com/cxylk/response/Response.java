@@ -15,15 +15,19 @@ public class Response {
     }
 
     public static <T> ResponseResult<T> makeSuccessRsp(String message) {
-        return new ResponseResult<T>().setCode(ResultCode.SUCCESS).setMsg(message);
+        return new ResponseResult<T>().setCode(ResultCode.SUCCESS.getCode()).setMsg(message);
     }
 
     public static <T> ResponseResult<T> makeSuccessRsp(T data) {
-        return new ResponseResult<T>().setCode(ResultCode.SUCCESS).setMsg(ResultCode.SUCCESS.getMsg()).setData(data);
+        return new ResponseResult<T>().setCode(ResultCode.SUCCESS.getCode()).setMsg(ResultCode.SUCCESS.getMsg()).setData(data);
     }
 
     public static <T> ResponseResult<T> makeErrRsp(String message) {
         return new ResponseResult<T>().setCode(ResultCode.SERVER_ERROR).setMsg(message);
+    }
+
+    public static <T> ResponseResult<T> makeErrRsp(ResultCode resultCode) {
+        return new ResponseResult<T>().setCode(resultCode.getCode()).setMsg(resultCode.getMsg());
     }
 
     public static <T> ResponseResult<T> makeErrRsp(String code, String message) {

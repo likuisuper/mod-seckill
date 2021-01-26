@@ -183,7 +183,7 @@ public class ComUtil {
             try {
                 date = simpleDateFormat.parse(dateStr);
             } catch (ParseException e) {
-                throw new BizException(ResultCode.FAIL.getCode(), "date.format.error");
+                throw new BizException(ResultCode.DATE_FORMAT_ERROR);
             }
         }
         return date;
