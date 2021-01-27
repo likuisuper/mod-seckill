@@ -36,7 +36,7 @@ public class MD5Util {
     }
 
     /**
-     * 第二次MD5加密，用于密码入库
+     * 第二次MD5加密，用于密码入库。因为第一次MD5加密后的密码在网络传输中不安全，谷歌浏览器的form data中可以直接看到该密码
      *
      * @param formPass 用户输入
      * @param salt     随机盐

@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString
-public class BizException extends RuntimeException {
+public class BizException extends Exception {
     private static final long servialVersionUID = 1L;
 
     private ResultCode resultCode;

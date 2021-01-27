@@ -30,6 +30,10 @@
         </dependency>
         <dependency>
             <groupId>com.cxylk</groupId>
+            <artifactId>redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cxylk</groupId>
             <artifactId>dao</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

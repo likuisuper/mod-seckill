@@ -44,6 +44,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(value = Exception.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<Object> badException(Exception exception) {
+        exception.printStackTrace();
         if(exception instanceof BindException){
             BindException bindException= (BindException) exception;
             //获取所有异常

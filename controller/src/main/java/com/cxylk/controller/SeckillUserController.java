@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @Classname UserController
  * @Description 用户接口
@@ -42,11 +44,10 @@ public class SeckillUserController {
     @ApiOperation(value = "登录实现")
     @PostMapping("/login")
     @ResponseBody
-    public ResponseResult<Boolean> doLogin(@Validated SeckillUserVO seckillUserVO) throws BizException {
-        LOGGER.info(seckillUserVO.toString());
+    public ResponseResult<Boolean> doLogin(@Validated SeckillUserVO seckillUserVO,
+                                           HttpServletResponse response) throws BizException {
         SeckillUserDTO seckillUserDTO = GeneralConvertor.convertOnlyMatch(seckillUserVO, SeckillUserDTO.class);
-        seckillUserService.login(seckillUserDTO);
-        System.out.println("====:"+Response.makeSuccessRsp(true).toString());
+        seckillUserService.login(response,seckillUserDTO);
         return Response.makeSuccessRsp(true);
     }
 }

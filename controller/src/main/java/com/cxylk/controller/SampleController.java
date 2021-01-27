@@ -5,7 +5,7 @@ import com.cxylk.po.User;
 import com.cxylk.response.Response;
 import com.cxylk.response.ResponseResult;
 import com.cxylk.service.RedisService;
-import com.cxylk.service.impl.UserKey;
+import com.cxylk.service.impl.SeckillUserKey;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class SampleController {
     @ApiOperation(value = "从redis中获取value")
     @GetMapping("/getByRedis")
     public ResponseResult<User> getByRedis() {
-        User user = redisService.get(UserKey.getById, "" + 1, User.class);
+        User user = redisService.get(SeckillUserKey.getById, "" + 1, User.class);
         return Response.makeSuccessRsp(user);
     }
 
@@ -72,7 +72,7 @@ public class SampleController {
         User user = new User();
         user.setId(1);
         user.setName("12345");
-        redisService.set(UserKey.getById, "" + 1, user);
+        redisService.set(SeckillUserKey.getById, "" + 1, user);
         return Response.makeSuccessRsp(true);
     }
 
@@ -80,7 +80,7 @@ public class SampleController {
     @ApiOperation(value = "将key中存储的值加1")
     @GetMapping("/incr")
     public ResponseResult<Long> increment() {
-        long incr = redisService.incr(UserKey.getById, "" + 1);
+        long incr = redisService.incr(SeckillUserKey.getById, "" + 1);
         return Response.makeSuccessRsp(incr);
     }
 }

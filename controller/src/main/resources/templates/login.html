@@ -16,12 +16,12 @@
     <!-- jquery-validator -->
     <script type="text/javascript" th:src="@{/plugins/jquery-validation/jquery.validate.min.js}"></script>
     <script type="text/javascript" th:src="@{/plugins/jquery-validation/localization/messages_zh.min.js}"></script>
-    <!--&lt;!&ndash; sweetalert &ndash;&gt;-->
-    <!--<script type="text/javascript" th:src="@{/plugins/sweetalert/sweetalert.min.js}"></script>-->
+    <!-- sweetalert -->
+    <script type="text/javascript" th:src="@{/plugins/sweetalert/sweetalert.min.js}"></script>
     <!-- layer -->
     <script type="text/javascript" th:src="@{/plugins/layer/layer.js}"></script>
     <!-- md5.js -->
-    <script type="text/javascript" th:src="@{/static/dist/js/plugins/md5.min.js}"></script>
+    <script type="text/javascript" th:src="@{/dist/js/plugins/md5.min.js}"></script>
     <!-- common.js -->
     <script type="text/javascript" th:src="@{/dist/js/common.js}"></script>
     <style>
@@ -124,12 +124,19 @@
                 layer.closeAll();
                 if (data.code == 200) {
                     layer.msg("成功");
+                    window.location.href="/goods/to_list";
                 } else {
-                    layer.msg(data.msg);
+                    swal(data.msg,{
+                        icon:"error",
+                    });
+                    // layer.msg(data.msg);
                 }
             },
             error: function () {
-                layer.closeAll();
+                swal("操作失败",{
+                    icon:"error"
+                });
+                // layer.closeAll();
             }
         });
     }
