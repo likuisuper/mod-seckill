@@ -27,4 +27,11 @@ public interface GoodsMapper {
      * @return
      */
     List<SeckillGoodsDTO> listGoods();
+
+    /**
+     * 根据id获取商品详情
+     * @param goodsId
+     * @return
+     */
+    SeckillGoodsDTO getGoodsDetail(long goodsId);
 }

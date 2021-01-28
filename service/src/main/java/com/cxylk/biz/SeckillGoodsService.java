@@ -16,4 +16,11 @@ public interface SeckillGoodsService {
      * @return
      */
     List<SeckillGoodsDTO> getGoodsList();
+
+    /**
+     * 根据商品id获取商品详情
+     * @param goodsId
+     * @return
+     */
+    SeckillGoodsDTO getGoodsDetail(long goodsId);
 }

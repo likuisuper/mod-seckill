@@ -32,6 +32,11 @@
     from goods g left join seckill_goods sk on g.id=sk.goods_id
   </select>
 
+  <select id="getGoodsDetail" resultType="com.cxylk.domain.SeckillGoodsDTO">
+    select g.*,sk.seckill_price,sk.stock_count,sk.start_date,sk.end_date
+    from goods g left join seckill_goods sk on g.id=sk.goods_id where g.id=#{goodsId}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from goods
     where id = #{id,jdbcType=BIGINT}
