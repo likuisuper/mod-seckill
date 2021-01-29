@@ -23,4 +23,10 @@ public interface SeckillGoodsService {
      * @return
      */
     SeckillGoodsDTO getGoodsDetail(long goodsId);
+
+    /**
+     * 减库存
+     * @param goodsDTO
+     */
+    void reduceGoods(SeckillGoodsDTO goodsDTO);
 }

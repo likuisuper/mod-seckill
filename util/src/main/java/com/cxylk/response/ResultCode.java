@@ -35,9 +35,9 @@ public class ResultCode {
 //    //订单模块 5004XX
 //    ORDER_NOT_EXIST(500400, "订单不存在"),
 //
-//    //秒杀模块 5005XX
-//    SECKILL_OVER(500500, "商品已经秒杀完毕"),
-//    REPEATE_SECKILL(500501, "不能重复秒杀");
+    //秒杀模块 5005XX
+    public static final ResultCode SECKILL_OVER=new ResultCode("500500", "商品已经秒杀完毕");
+    public static final ResultCode REPEATE_SECKILL=new ResultCode("500501", "不能重复秒杀");
 
     private ResultCode() {
     }

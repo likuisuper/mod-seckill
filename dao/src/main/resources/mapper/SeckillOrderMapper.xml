@@ -16,6 +16,10 @@
     from seckill_order
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="getOrderByUserIdGoodsId" resultType="com.cxylk.po.SeckillOrder">
+    select * from seckill_order where user_id=#{userId} and goods_id=#{goodsId}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from seckill_order
     where id = #{id,jdbcType=BIGINT}

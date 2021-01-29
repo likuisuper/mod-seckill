@@ -16,4 +16,12 @@ public interface SeckillOrderMapper {
     int updateByPrimaryKeySelective(SeckillOrder record);
 
     int updateByPrimaryKey(SeckillOrder record);
+
+    /**
+     * 根据userId和goodsId查询秒杀商品信息
+     * @param userId
+     * @param goodsId
+     * @return
+     */
+    SeckillOrder getOrderByUserIdGoodsId(long userId,long goodsId);
 }

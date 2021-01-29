@@ -27,4 +27,9 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService{
     public SeckillGoodsDTO getGoodsDetail(long goodsId) {
         return goodsMapper.getGoodsDetail(goodsId);
     }
+
+    @Override
+    public void reduceGoods(SeckillGoodsDTO goodsDTO) {
+        goodsMapper.reduceGoods(goodsDTO);
+    }
 }

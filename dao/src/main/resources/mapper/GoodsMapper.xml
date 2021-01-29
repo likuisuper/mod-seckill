@@ -37,6 +37,10 @@
     from goods g left join seckill_goods sk on g.id=sk.goods_id where g.id=#{goodsId}
   </select>
 
+  <update id="reduceGoods" parameterType="com.cxylk.domain.SeckillGoodsDTO">
+    update seckill_goods set stock_count=stock_count-1 where goods_id=#{goodsId}
+  </update>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from goods
     where id = #{id,jdbcType=BIGINT}

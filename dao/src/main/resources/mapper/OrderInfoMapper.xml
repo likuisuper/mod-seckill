@@ -29,7 +29,7 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.cxylk.po.OrderInfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+    <selectKey keyProperty="id"  order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into order_info (user_id, goods_id, delivery_addr_id, 
