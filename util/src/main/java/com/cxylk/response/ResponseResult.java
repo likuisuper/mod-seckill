@@ -36,6 +36,7 @@ public class ResponseResult<T> {
         this.msg = msg;
         return this;
     }
+
     public ResponseResult<T> setData(T data) {
         this.data = data;
         return this;

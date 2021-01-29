@@ -105,8 +105,8 @@
         // 加载中
         g_showLoading();
         let mobile=$("#mobile").val();
-        let salt=g_passsword_salt;
         let inputPass=$("#password").val();
+        let salt=g_passsword_salt;
         //规则必须与后端定义的加密规制一致
         let passStr="" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
         //md5加密，如果绕过前端，比如使用swagger,那么加密是没有效果的
