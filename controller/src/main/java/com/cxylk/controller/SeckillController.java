@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Classname SeckillController
@@ -39,12 +40,13 @@ public class SeckillController {
     private SeckillService seckillService;
 
     @ApiOperation(value = "秒杀实现")
-    @PostMapping("/do_seckill/{goodsId}")
-    public String doSeckill(@PathVariable("goodsId") long goodsId, Model model, SeckillUser user) {
+    @PostMapping("/do_seckill")
+    public String doSeckill(@RequestParam("goodsId") long goodsId, Model model, SeckillUser user) {
         //如果未登录则跳转到登录界面
         if (user == null) {
             return "login";
         }
+        model.addAttribute("user",user);
         SeckillGoodsDTO goodsDetail = seckillGoodsService.getGoodsDetail(goodsId);
         //1.如果秒杀商品库存<=0秒杀失败
         if (goodsDetail.getStockCount() <= 0) {

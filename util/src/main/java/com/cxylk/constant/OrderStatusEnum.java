@@ -10,7 +10,9 @@ public enum OrderStatusEnum {
     NO_PAY(0,"新建未支付"),
     ALREADY_PAY(1,"已支付"),
     ALREADY_SEND(2,"已发货"),
-    ALREADY_RECEIVE(3,"已收货");
+    ALREADY_RECEIVE(3,"已收货"),
+    ALREADY_BACK(4,"已退款"),
+    ALREADY_SUCCESS(5,"已完成");
 
     private int code;
     private String msg;

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>订单详情</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" th:href="@{/dist/css/ionicons.min.css}"/>
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}"/>
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}"/>
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">商品订单详情</h3>
+    </div>
+    <table id="orderDetail" class="table table-hover">
+        <tr>
+            <td>商品名称</td>
+            <td colspan="3" th:text="${goodsDetail.goodsName}"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td colspan="3"><img th:src="${goodsDetail.goodsImg}" width="200" height="200"></td>
+        </tr>
+        <tr>
+            <td>商品价格</td>
+            <td colspan="3" th:text="${orderInfo.goodsPrice}"></td>
+        </tr>
+        <tr>
+            <td>下单时间</td>
+            <td colspan="3" th:text="${#dates.format(orderInfo.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+            <td>订单状态</td>
+            <td>
+                <span th:if="${orderInfo.status eq 0}">未支付</span>
+                <span th:if="${orderInfo.status eq 1}">已支付</span>
+                <span th:if="${orderInfo.status eq 2}">已发货</span>
+                <span th:if="${orderInfo.status eq 3}">已收货</span>
+                <span th:if="${orderInfo.status eq 4}">已退款</span>
+                <span th:if="${orderInfo.status eq 5}">已完成</span>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-block" id="payButton" type="submit">立即支付</button>
+            </td>
+        </tr>
+        <tr>
+            <td>收货人</td>
+            <td colspan="2" th:text="${user.nickname}"></td>
+        </tr>
+        <tr>
+            <td>收货地址</td>
+            <td colspan="2">江苏省苏州市慧湖大厦嘉图网络科技有限公司</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
