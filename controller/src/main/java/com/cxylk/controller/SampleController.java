@@ -1,6 +1,7 @@
 package com.cxylk.controller;
 
 import com.cxylk.biz.UserService;
+import com.cxylk.po.SeckillUser;
 import com.cxylk.po.User;
 import com.cxylk.response.Response;
 import com.cxylk.response.ResponseResult;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,5 +84,13 @@ public class SampleController {
     public ResponseResult<Long> increment() {
         long incr = redisService.incr(SeckillUserKey.getById, "" + 1);
         return Response.makeSuccessRsp(incr);
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "获取用户用于压测")
+    @GetMapping("/userList")
+    public ResponseResult<Object> getUserList(Model model, SeckillUser user) {
+        model.addAttribute("user",user);
+        return Response.makeSuccessRsp(user);
     }
 }

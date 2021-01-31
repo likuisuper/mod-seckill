@@ -1,6 +1,7 @@
 package com.cxylk.biz;
 
 import com.cxylk.App;
+import com.cxylk.dao.OrderInfoMapper;
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.SeckillUser;
 import org.junit.jupiter.api.Test;
@@ -18,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(classes = App.class)
 public class SeckillOrderServiceImplTest {
     @Autowired
+    private OrderInfoMapper orderInfoMapper;
+    @Autowired
     private SeckillOrderService seckillOrderService;
 
-//    @Transactional
-//    @Rollback
+    @Transactional
+    @Rollback
     @Test
     public void create(){
         SeckillUser user=new SeckillUser();
