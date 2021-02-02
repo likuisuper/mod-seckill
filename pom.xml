@@ -121,73 +121,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.cxylk</groupId>
-                                        <artifactId>release</artifactId>
-                                        <versionRange>
-                                            [0.0.10,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>touch</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            maven-antrun-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.8,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>run</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            com.phoenixnap.oss
-                                        </groupId>
-                                        <artifactId>
-                                            springmvc-raml-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [0.8.6,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>
-                                                generate-springmvc-api-docs
-                                            </goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-
-                <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.1</version>
                     <executions>
@@ -206,37 +139,6 @@
                                         <filtering>true</filtering>
                                     </resource>
                                 </resources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>com.coderplus.maven.plugins</groupId>
-                    <artifactId>copy-rename-maven-plugin</artifactId>
-                    <version>1.0</version>
-                    <executions>
-                        <execution>
-                            <id>rename-descriptor-outputs</id>
-                            <phase>generate-resources</phase>
-                            <goals>
-                                <goal>rename</goal>
-                            </goals>
-                            <configuration>
-                                <fileSets>
-                                    <fileSet>
-                                        <sourceFile>${project.build.directory}/ModuleDescriptor-template.json
-                                        </sourceFile>
-                                        <destinationFile>${project.build.directory}/ModuleDescriptor.json
-                                        </destinationFile>
-                                    </fileSet>
-                                    <fileSet>
-                                        <sourceFile>${project.build.directory}/DeploymentDescriptor-template.json
-                                        </sourceFile>
-                                        <destinationFile>${project.build.directory}/DeploymentDescriptor.json
-                                        </destinationFile>
-                                    </fileSet>
-                                </fileSets>
                             </configuration>
                         </execution>
                     </executions>

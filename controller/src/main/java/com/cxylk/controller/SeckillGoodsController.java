@@ -30,6 +30,10 @@ public class SeckillGoodsController {
     @Autowired
     private SeckillGoodsService seckillGoodsService;
 
+    /**
+     * QPS:1116
+     * 5000*10
+     */
     @ApiOperation(value = "商品列表")
     @GetMapping("/to_list")
     public String goodsList(Model model, SeckillUser seckillUser) throws BizException {
