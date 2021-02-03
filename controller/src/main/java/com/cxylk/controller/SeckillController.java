@@ -39,6 +39,10 @@ public class SeckillController {
     @Autowired
     private SeckillService seckillService;
 
+    /**
+     * QPS:702
+     * 5000*10，并发太大，服务器抗不住，error:20.36%
+     */
     @ApiOperation(value = "秒杀实现")
     @PostMapping("/do_seckill")
     public String doSeckill(@RequestParam("goodsId") long goodsId, Model model, SeckillUser user) {

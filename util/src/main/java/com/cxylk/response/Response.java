@@ -14,9 +14,9 @@ public class Response {
         return resOK;
     }
 
-    public static <T> ResponseResult<T> makeSuccessRsp(String message) {
-        return new ResponseResult<T>().setCode(ResultCode.SUCCESS.getCode()).setMsg(message);
-    }
+//    public static <T> ResponseResult<T> makeSuccessRsp(String message) {
+//        return new ResponseResult<T>().setCode(ResultCode.SUCCESS.getCode()).setMsg(message);
+//    }
 
     public static <T> ResponseResult<T> makeSuccessRsp(T data) {
         return new ResponseResult<T>().setCode(ResultCode.SUCCESS.getCode()).setMsg(ResultCode.SUCCESS.getMsg()).setData(data);

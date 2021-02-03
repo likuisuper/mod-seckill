@@ -37,7 +37,7 @@ public class SeckillUserServiceImpl implements SeckillUserService{
     }
 
     @Override
-    public boolean login(HttpServletResponse response,SeckillUserDTO seckillUserDTO) throws BizException {
+    public String login(HttpServletResponse response,SeckillUserDTO seckillUserDTO) throws BizException {
         if(ComUtil.isEmpty(seckillUserDTO)){
             throw new BizException(ResultCode.SERVER_ERROR);
         }
@@ -61,7 +61,7 @@ public class SeckillUserServiceImpl implements SeckillUserService{
         //生成一个UUID作为token，只需要生成一次token即可
         String token= UUIDUtil.uuid();
         addCookie(response,token,seckillUser);
-        return true;
+        return token;
     }
 
     @Override

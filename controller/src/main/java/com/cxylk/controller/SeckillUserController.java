@@ -44,10 +44,10 @@ public class SeckillUserController {
     @ApiOperation(value = "登录实现")
     @PostMapping("/login")
     @ResponseBody
-    public ResponseResult<Boolean> doLogin(@Validated SeckillUserVO seckillUserVO,
+    public ResponseResult<String> doLogin(@Validated SeckillUserVO seckillUserVO,
                                            HttpServletResponse response) throws BizException {
         SeckillUserDTO seckillUserDTO = GeneralConvertor.convertOnlyMatch(seckillUserVO, SeckillUserDTO.class);
-        seckillUserService.login(response,seckillUserDTO);
-        return Response.makeSuccessRsp(true);
+        String token = seckillUserService.login(response, seckillUserDTO);
+        return Response.makeSuccessRsp(token);
     }
 }

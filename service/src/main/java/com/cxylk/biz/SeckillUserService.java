@@ -23,9 +23,10 @@ public interface SeckillUserService {
     /**
      * 登录实现
      * @param seckillUserDTO
-     * @return
+     * @return token
      */
-    boolean login(HttpServletResponse response,SeckillUserDTO seckillUserDTO) throws BizException;
+    String login(HttpServletResponse response,SeckillUserDTO seckillUserDTO) throws BizException;
+
 
     /**
      * 根据token获取用户信息
