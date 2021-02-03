@@ -5,13 +5,21 @@ import com.cxylk.biz.SeckillUserService;
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.exception.BizException;
 import com.cxylk.po.SeckillUser;
+import com.cxylk.service.RedisService;
+import com.cxylk.service.impl.GoodsKey;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.context.webflux.SpringWebFluxContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -25,27 +33,51 @@ import java.util.List;
 @RequestMapping("/goods")
 public class SeckillGoodsController {
     @Autowired
-    private SeckillUserService seckillUserService;
+    private RedisService redisService;
 
     @Autowired
     private SeckillGoodsService seckillGoodsService;
 
+    @Autowired
+    private ThymeleafViewResolver thymeleafViewResolver;
+
     /**
-     * QPS:1116
-     * 5000*10
+     * 未优化前：QPS:1116,5000*10
+     * 页面缓存
+     * 注意：返回类型为text/html，一定要加上responseBody
      */
     @ApiOperation(value = "商品列表")
-    @GetMapping("/to_list")
-    public String goodsList(Model model, SeckillUser seckillUser) throws BizException {
+    @GetMapping(value = "/to_list",produces = "text/html")
+    @ResponseBody
+    public String goodsList(HttpServletRequest request, HttpServletResponse response,Model model, SeckillUser seckillUser) throws BizException {
         model.addAttribute("user", seckillUser);
+        //第一步就先取缓存，没有再去数据库查，否则压测的时候还是mysql负载高于redis
+        String html=redisService.get(GoodsKey.getGoodsList,"",String.class);
+        //缓存中存在就直接返回
+        if(!StringUtils.isEmpty(html)){
+            return html;
+        }
         List<SeckillGoodsDTO> goodsList = seckillGoodsService.getGoodsList();
         model.addAttribute("goodsList", goodsList);
-        return "goods_list";
+        //手动渲染
+        WebContext context=new WebContext(request,response,request.getServletContext(),
+                request.getLocale(),model.asMap());
+        html=thymeleafViewResolver.getTemplateEngine().process("goods_list",context);
+        if(!StringUtils.isEmpty(html)){
+            //保存到缓存中
+            redisService.set(GoodsKey.getGoodsList,"",html);
+        }
+        return html;
     }
 
+    /**
+     * url缓存，和页面缓存区别不大，多了一个参数
+     */
     @ApiOperation(value = "商品详情")
-    @GetMapping("/to_detail/{goodsId}")
-    public String goodsDetail(@PathVariable("goodsId") long goodsId, Model model, SeckillUser seckillUser) throws BizException {
+    @GetMapping(value = "/to_detail/{goodsId}",produces = "text/html")
+    @ResponseBody
+    public String goodsDetail(@PathVariable("goodsId") long goodsId, Model model, SeckillUser seckillUser,
+                              HttpServletRequest request,HttpServletResponse response) throws BizException {
         model.addAttribute("user", seckillUser);
         SeckillGoodsDTO goodsDetail = seckillGoodsService.getGoodsDetail(goodsId);
         model.addAttribute("goods", goodsDetail);
@@ -74,6 +106,18 @@ public class SeckillGoodsController {
         //将秒杀状态和倒计时返回前端页面
         model.addAttribute("remainSeconds", remainSeconds);
         model.addAttribute("seckillStatus", seckillStatus);
-        return "goods_detail";
+        String html=redisService.get(GoodsKey.getGoodsDetail,""+goodsId,String.class);
+        //缓存中存在直接返回
+        if(!StringUtils.isEmpty(html)){
+            return html;
+        }
+        WebContext context=new WebContext(request,response,request.getServletContext(),request.getLocale(),model.asMap());
+        //手动渲染
+        html=thymeleafViewResolver.getTemplateEngine().process("goods_detail",context);
+        if(!StringUtils.isEmpty(html)){
+            //设置到缓存
+            redisService.set(GoodsKey.getGoodsDetail,""+goodsId,html);
+        }
+        return html;
     }
 }

@@ -40,7 +40,7 @@ public class SeckillController {
     private SeckillService seckillService;
 
     /**
-     * QPS:702
+     * QPS:702(windows下为945，无错误)
      * 5000*10，并发太大，服务器抗不住，error:20.36%
      */
     @ApiOperation(value = "秒杀实现")
