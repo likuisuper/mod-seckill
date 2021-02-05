@@ -42,15 +42,14 @@ public class SeckillGoodsController {
     private ThymeleafViewResolver thymeleafViewResolver;
 
     /**
-     * 未优化前：QPS:1116,5000*10
-     * 页面缓存
+     * 未优化前：QPS:907,4000*10,负载：15左右
+     * 页面缓存：QPS:2837,4000*10,负载：5左右
      * 注意：返回类型为text/html，一定要加上responseBody
      */
     @ApiOperation(value = "商品列表")
     @GetMapping(value = "/to_list",produces = "text/html")
     @ResponseBody
     public String goodsList(HttpServletRequest request, HttpServletResponse response,Model model, SeckillUser seckillUser) throws BizException {
-        model.addAttribute("user", seckillUser);
         //第一步就先取缓存，没有再去数据库查，否则压测的时候还是mysql负载高于redis
         String html=redisService.get(GoodsKey.getGoodsList,"",String.class);
         //缓存中存在就直接返回
@@ -58,6 +57,7 @@ public class SeckillGoodsController {
             return html;
         }
         List<SeckillGoodsDTO> goodsList = seckillGoodsService.getGoodsList();
+        model.addAttribute("user", seckillUser);
         model.addAttribute("goodsList", goodsList);
         //手动渲染
         WebContext context=new WebContext(request,response,request.getServletContext(),

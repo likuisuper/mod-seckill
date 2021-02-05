@@ -38,6 +38,14 @@ public interface RedisService {
     boolean exists(KeyPrefix prefix,String key);
 
     /**
+     * 删除key
+     * @param prefix
+     * @param key
+     * @return
+     */
+    boolean delete(KeyPrefix prefix,String key);
+
+    /**
      * 将key中存储的value加1。如果键不存在，则新建key并设置为0
      * @param prefix
      * @param key

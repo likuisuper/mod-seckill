@@ -14,14 +14,24 @@ import javax.servlet.http.HttpServletResponse;
  **/
 public interface SeckillUserService {
     /**
-     * 根据id获取用户信息
+     * 根据id获取用户信息(对象级缓存)
      * @param id
      * @return
      */
     SeckillUser getById(long id);
 
     /**
+     * 修改用户密码(对象级缓存)
+     * @param token token值
+     * @param id 用户id
+     * @param newPassWord 更新的密码
+     * @return
+     */
+    boolean updatePassword(String token,long id,String newPassWord) throws BizException;
+
+    /**
      * 登录实现
+     * @param response
      * @param seckillUserDTO
      * @return token
      */
@@ -29,7 +39,7 @@ public interface SeckillUserService {
 
 
     /**
-     * 根据token获取用户信息
+     * 根据token获取用户信息(对象级缓存)
      * @param token
      * @return
      */

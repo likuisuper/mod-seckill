@@ -21,9 +21,9 @@ public class SeckillUserKey extends BasePrefix{
     public static SeckillUserKey token=new SeckillUserKey(EXPIRE_TOKEN,"lk");
 
     /**
-     * 根据id获取前缀
+     * 根据id获取前缀，0代表永久有效。对象级缓存
      */
-    public static SeckillUserKey getById=new SeckillUserKey("id");
+    public static SeckillUserKey getById=new SeckillUserKey(0,"id");
 
     /**
      * 根据name获取前缀
