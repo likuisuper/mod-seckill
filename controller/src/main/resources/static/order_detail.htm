@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>订单详情</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/dist/css/ionicons.min.css"/>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css"/>
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css"/>
+    <!-- jquery -->
+    <script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/plugins/layer/layer.js"></script>
+    <script type="text/javascript" src="/dist/js/common.js"></script>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">商品订单详情</h3>
+    </div>
+    <table id="orderDetail" class="table table-hover">
+        <tr>
+            <td>商品名称</td>
+            <td colspan="3" id="goodsName"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td colspan="3"><img id="goodsImage" width="200" height="200"></td>
+        </tr>
+        <tr>
+            <td>商品价格</td>
+            <td colspan="3" id="goodsPrice"></td>
+        </tr>
+        <tr>
+            <td>下单时间</td>
+            <td colspan="3" id="orderTime"></td>
+        </tr>
+        <tr>
+            <td>订单状态</td>
+            <td id="orderStatus"></td>
+            <td>
+                <button class="btn btn-primary btn-block" id="payButton" type="submit">立即支付</button>
+            </td>
+        </tr>
+        <tr>
+            <td>收货人</td>
+            <td colspan="2" id="receiveName"></td>
+        </tr>
+        <tr>
+            <td>收货地址</td>
+            <td colspan="2">江苏省苏州市慧湖大厦嘉图网络科技有限公司</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

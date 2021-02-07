@@ -24,7 +24,7 @@ public class ResultCode {
     public static final ResultCode PASSWORD_EMPTY = new ResultCode("500211", "登录密码不能为空");
     public static final ResultCode MOBILE_ERROR = new ResultCode("500213", "手机号格式错误");
 
-//    SESSION_ERROR(500210, "Session不存在或者已经失效"),
+    public static final ResultCode SESSION_ERROR=new ResultCode("500210", "Session不存在或者已经失效");
 
 
     public static final ResultCode PASSWORD_ERROR = new ResultCode("500215", "密码错误");

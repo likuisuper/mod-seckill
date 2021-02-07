@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>商品详情</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/dist/css/ionicons.min.css"/>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css"/>
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css"/>
+    <!-- jquery -->
+    <script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/plugins/layer/layer.js"></script>
+    <script type="text/javascript" src="/dist/js/common.js"></script>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">秒杀商品详情</h3>
+        </div>
+        <div class="panel-body">
+            <span id="userTip">你还没有登录，请登录后再操作！</span>
+            <span>没有收货地址的提示...</span>
+        </div>
+        <table id="goodsDetail" class="table table-hover">
+            <tr>
+                <td>商品名称</td>
+                <td colspan="3" id="goodsName"></td>
+            </tr>
+            <tr>
+                <td>商品图片</td>
+                <td colspan="3"><img id="goodsImage" width="200" height="200"></td>
+            </tr>
+            <tr>
+                <td>秒杀开始时间</td>
+                <td id="startTime"></td>
+                <td>
+<!--                    放一个隐藏域同步时间，不然只有秒杀倒计时的时候才有值-->
+                    <input type="hidden" id="remainSeconds"/>
+                    <span id="seckillTip"></span>
+                </td>
+                <td>
+<!--                    <form id="seckillForm" method="post" action="/seckill/do_seckill">-->
+<!--                        <button class="btn btn-primary btn-block" type="submit" id="seckillBtn">立即秒杀</button>-->
+<!--                        <input type="hidden" name="goodsId" id="goodsId"/>-->
+<!--                    </form>-->
+                    <button class="btn btn-primary btn-block" type="button" id="seckillBtn" onclick="doSeckill()">立即秒杀</button>
+                    <input type="hidden" name="goodsId" id="goodsId"/>
+                </td>
+            </tr>
+            <tr>
+                <td>商品原价</td>
+                <td colspan="3" id="goodsPrice"></td>
+            </tr>
+            <tr>
+                <td>商品秒杀价</td>
+                <td colspan="3" id="seckillPrice"></td>
+            </tr>
+            <tr>
+                <td>库存数量</td>
+                <td colspan="3" id="stockCount"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+    function doSeckill() {
+        $.ajax({
+            url:"/seckill/do_seckill",
+            data:$("#goodsId").val(),
+            type:"POST",
+            success:function (data) {
+                if(data.code==200){
+                    window.location.href="/goods_detail.htm?orderId="+data.data.id;
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("客服端请求错误")
+            }
+        })
+    }
+    function render(detail){
+        //秒杀状态
+        let seckillStatus=detail.seckillStatus;
+        //秒杀倒计时
+        let remainSeconds=detail.remainSeconds;
+        let goodsDetail=detail.goodsDetail;
+        let seckillUser=detail.seckillUser;
+        if(seckillUser){
+            $("#userTip").hide();
+        }
+        $("#goodsName").text(goodsDetail.goodsName);
+        $("#goodsImage").attr("src",goodsDetail.goodsImg);
+        $("#startTime").text(new Date(goodsDetail.startDate).format("yyyy-MM-dd hh:mm:ss"));
+        $("#remainSeconds").val(remainSeconds);
+        $("#goodsId").val(goodsDetail.id);
+        $("#goodsPrice").text(goodsDetail.goodsPrice);
+        $("#seckillPrice").text(goodsDetail.seckillPrice);
+        $("#stockCount").text(goodsDetail.stockCount);
+        countDown();
+    }
+
+    $(function () {
+        getDetail()
+    });
+    function getDetail() {
+        let goodsId=g_getQueryString("goodsId");
+        $.ajax({
+            url:"/goods/detail/"+goodsId,
+            type:"GET",
+            success:function (data) {
+                if(data.code==200){
+                   render(data.data)
+                }else {
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("客服端请求错误")
+            }
+        });
+    }
+    function countDown() {
+        //值为0，倒计时，-1
+        let remainSeconds=$("#remainSeconds").val();
+        //定义一个变量接收timeOut函数值，然后清0操作
+        let timeOut;
+        if(remainSeconds>0){//秒杀还没开始
+            $("#seckillBtn").attr("disabled",true);//禁用按钮
+            $("#seckillTip").html("秒杀倒计时:"+remainSeconds+"秒");
+            //1s(1000ms)之后回调function
+            timeOut=setTimeout(function () {
+                //倒计时
+                $("#countDown").text(remainSeconds-1);
+                //为了保持同步，还要将隐藏域input-1
+                $("#remainSeconds").val(remainSeconds-1);
+                //循环
+                countDown();
+            },1000);
+        }else if(remainSeconds==0){//秒杀进行中(此处不能用===，因为只有在类型相等时它才会判断值)
+            $("#seckillBtn").attr("disabled",false);
+            // 倒计时清0
+            if(timeOut){
+                clearTimeout(timeOut);
+            }
+            $("#seckillTip").html("秒杀进行中");
+        }else{//秒杀已结束
+            $("#seckillBtn").attr("disabled",true);
+            $("#seckillTip").html("秒杀已结束");
+        }
+    }
+</script>
+</html>

@@ -11,7 +11,7 @@ function g_getQueryString(name) {
     var r = window.location.search.substr(1).match(reg);
     if(r != null) return unescape(r[2]);
     return null;
-};
+}
 //设定时间格式化函数，使用new Date().format("yyyyMMddhhmmss");
 Date.prototype.format = function (format) {
     var args = {
