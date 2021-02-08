@@ -56,4 +56,54 @@
     </table>
 </div>
 </body>
+<script>
+    $(function () {
+        getOrderDetail();
+    });
+
+    function getOrderDetail() {
+        let orderId=g_getQueryString("orderId");
+        $.ajax({
+            url:"/order/detail",
+            data:{
+                orderId:orderId,
+            },
+            type:"GET",
+            success:function (data) {
+                if(data.code==200){
+                    render(data.data);
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("客户端请求错误")
+            }
+        })
+    }
+
+    function render(detail) {
+        let goods=detail.goodsDTO;
+        let order=detail.orderInfo;
+        let user=detail.seckillUser;
+        $("#goodsName").text(goods.goodsName);
+        $("#goodsImage").attr("src",goods.goodsImg);
+        $("#goodsPrice").text(order.goodsPrice);
+        $("#orderTime").text(new Date(order.createDate).format("yyyy-MM-dd hh:mm:ss"));
+        let orderStatus="";
+        if(order.status==0){
+            orderStatus="未支付";
+        }else if(order.status==1){
+            orderStatus="已支付";
+        }else if(order.status==2){
+            orderStatus="已发货";
+        }else if(order.status==3){
+            orderStatus="已收货";
+        }else{
+            orderStatus="已完成";
+        }
+        $("#orderStatus").text(orderStatus);
+        $("#receiveName").text(user.nickname)
+    }
+</script>
 </html>

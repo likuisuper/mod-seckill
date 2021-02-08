@@ -33,7 +33,7 @@ public class ResultCode {
 //    //商品模块 5003XX
 //
 //    //订单模块 5004XX
-//    ORDER_NOT_EXIST(500400, "订单不存在"),
+public static final ResultCode ORDER_NOT_EXIST=new ResultCode("500400", "订单不存在");
 //
     //秒杀模块 5005XX
     public static final ResultCode SECKILL_OVER=new ResultCode("500500", "商品已经秒杀完毕");

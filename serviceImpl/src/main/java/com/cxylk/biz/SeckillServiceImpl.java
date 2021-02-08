@@ -20,7 +20,7 @@ public class SeckillServiceImpl implements SeckillService {
     private SeckillGoodsService seckillGoodsService;
 
     @Autowired
-    private SeckillOrderService seckillOrderService;
+    private OrderInfoService orderInfoService;
 
     @Transactional
     @Override
@@ -28,6 +28,6 @@ public class SeckillServiceImpl implements SeckillService {
         //减库存
         seckillGoodsService.reduceGoods(goodsDTO);
         //下订单(包含订单和秒杀订单)
-        return seckillOrderService.createOrder(user, goodsDTO);
+        return orderInfoService.createOrder(user, goodsDTO);
     }
 }

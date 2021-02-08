@@ -38,7 +38,8 @@
   </select>
 
   <update id="reduceGoods" parameterType="com.cxylk.domain.SeckillGoodsDTO">
-    update seckill_goods set stock_count=stock_count-1 where goods_id=#{id}
+--     为了防止库存减为负数，即发生超卖，加上stock_count>0条件
+    update seckill_goods set stock_count=stock_count-1 where goods_id=#{id} and stock_count>0
   </update>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

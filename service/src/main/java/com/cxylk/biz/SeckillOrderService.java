@@ -21,12 +21,6 @@ public interface SeckillOrderService {
      */
     SeckillOrder getOrderByUserIdGoodsId(long userId, long goodsId);
 
-    /**
-     * 生成订单和秒杀订单(原子操作)
-     *
-     * @param user     用户信息
-     * @param goodsDTO 商品信息
-     * @return 订单
-     */
-    OrderInfo createOrder(SeckillUser user, SeckillGoodsDTO goodsDTO);
+
+    int save(SeckillOrder seckillOrder);
 }

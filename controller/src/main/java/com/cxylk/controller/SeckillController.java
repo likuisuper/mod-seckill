@@ -36,8 +36,8 @@ public class SeckillController {
     private SeckillService seckillService;
 
     /**
-     * 优化前：QPS:702(windows下为945，无错误)
-     * linux:5000*10，并发太大，服务器抗不住，error:20.36%
+     * 优化前：QPS:450
+     * linux:3000*10
      * get是幂等的，而post是不幂等的
      */
     @ApiOperation(value = "秒杀实现")

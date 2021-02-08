@@ -70,11 +70,13 @@
     function doSeckill() {
         $.ajax({
             url:"/seckill/do_seckill",
-            data:$("#goodsId").val(),
+            data:{
+                goodsId:$("#goodsId").val(),
+            },
             type:"POST",
             success:function (data) {
                 if(data.code==200){
-                    window.location.href="/goods_detail.htm?orderId="+data.data.id;
+                    window.location.href="/order_detail.htm?orderId="+data.data.id;
                 }else{
                     layer.msg(data.msg)
                 }
