@@ -1,5 +1,6 @@
 package com.cxylk.controller;
 
+import com.cxylk.MQSender;
 import com.cxylk.biz.UserService;
 import com.cxylk.po.SeckillUser;
 import com.cxylk.po.User;
@@ -30,6 +31,8 @@ public class SampleController {
     private UserService userService;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private MQSender mqSender;
 
     @GetMapping("/thymeleaf/demo")
     public String hello() {
@@ -90,7 +93,39 @@ public class SampleController {
     @ApiOperation(value = "获取用户用于压测")
     @GetMapping("/userList")
     public ResponseResult<Object> getUserList(Model model, SeckillUser user) {
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         return Response.makeSuccessRsp(user);
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "mq简单模式测试")
+    @GetMapping("/mq/simple")
+    public ResponseResult<Object> mqSimple() {
+        mqSender.send("hello mq");
+        return Response.makeSuccessRsp();
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "mq的topic测试")
+    @GetMapping("/mq/topic")
+    public ResponseResult<Object> mqTopic() {
+        mqSender.sendTopic("hello mq");
+        return Response.makeSuccessRsp();
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "mq的fanout测试")
+    @GetMapping("/mq/fanout")
+    public ResponseResult<Object> mqFanout() {
+        mqSender.sendFanout("hello mq");
+        return Response.makeSuccessRsp();
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "mq的header测试")
+    @GetMapping("/mq/header")
+    public ResponseResult<Object> mqHeader() {
+        mqSender.sendHeaders("hello mq");
+        return Response.makeSuccessRsp();
     }
 }

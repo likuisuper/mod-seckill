@@ -52,6 +52,10 @@
         </dependency>
         <dependency>
             <groupId>com.cxylk</groupId>
+            <artifactId>rabbitmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cxylk</groupId>
             <artifactId>util</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
