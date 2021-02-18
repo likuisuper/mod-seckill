@@ -54,7 +54,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goodsDTO.getId());
         seckillOrder.setUserId(user.getId());
-        seckillOrder.setOrderId(orderId);
+        seckillOrder.setOrderId(orderInfo.getId());
         redisService.set(OrderKey.getSeckillOrderKey, "" + user.getId() + "_" + goodsDTO.getId(), seckillOrder);
         seckillOrderService.save(seckillOrder);
         return orderInfo;

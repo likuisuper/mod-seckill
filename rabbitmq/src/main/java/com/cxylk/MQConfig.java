@@ -16,6 +16,12 @@ import java.util.Map;
  **/
 @Configuration
 public class MQConfig {
+    /*秒杀队列*/
+    @Bean
+    public Queue seckillQueue() {
+        return new Queue(ConstantField.SECKILL_QUEUE, true);
+    }
+
     /*简单模式*/
     @Bean
     public Queue queue() {

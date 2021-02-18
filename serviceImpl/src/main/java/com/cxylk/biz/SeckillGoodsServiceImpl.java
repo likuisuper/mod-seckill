@@ -2,6 +2,7 @@ package com.cxylk.biz;
 
 import com.cxylk.dao.GoodsMapper;
 import com.cxylk.domain.SeckillGoodsDTO;
+import com.cxylk.po.SeckillGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,10 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService{
     }
 
     @Override
-    public void reduceGoods(SeckillGoodsDTO goodsDTO) {
-        goodsMapper.reduceGoods(goodsDTO);
+    public boolean reduceGoods(SeckillGoodsDTO goodsDTO) {
+        SeckillGoods seckillGoods=new SeckillGoods();
+        seckillGoods.setGoodsId(goodsDTO.getId());
+        int result = goodsMapper.reduceGoods(goodsDTO);
+        return result>0;
     }
 }

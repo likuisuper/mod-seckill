@@ -10,11 +10,13 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css"/>
     <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/plugins/sweetalert/sweetalert.css"/>
     <!-- jquery -->
     <script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/plugins/layer/layer.js"></script>
     <script type="text/javascript" src="/dist/js/common.js"></script>
+    <script type="text/javascript" src="/plugins/sweetalert/sweetalert.min.js"></script>
 </head>
 <body>
     <div class="panel panel-primary">
@@ -67,6 +69,48 @@
     </div>
 </body>
 <script>
+
+    function getSeckillResult(goodsId) {
+        g_showLoading();
+        $.ajax({
+            url:"/seckill/seckillResult",
+            data:{
+                goodsId:$("#goodsId").val(),
+            },
+            type:"GET",
+            success:function (data) {
+                if(data.code==200){
+                    let result=data.data;
+                    if(result<0){
+                        layer.msg("对不起，秒杀失败!")
+                    }else if(result==0){//继续轮询
+                        setTimeout(function () {
+                            getSeckillResult(goodsId)
+                        },50)
+                    }else{
+                        swal({
+                            title:"恭喜你,秒杀成功",
+                            text:"是否跳至订单详情页",
+                            icon:"success",
+                            buttons:true,
+                            dangerMode: true,
+                        }).then((flag)=>{
+                            if(flag){
+                                window.location.href="/order_detail.htm?orderId="+result;
+                            }
+                        });
+                        layer.closeAll();
+                    }
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("客服端请求错误")
+            }
+        })
+    }
+
     function doSeckill() {
         $.ajax({
             url:"/seckill/do_seckill",
@@ -76,7 +120,8 @@
             type:"POST",
             success:function (data) {
                 if(data.code==200){
-                    window.location.href="/order_detail.htm?orderId="+data.data.id;
+                    //window.location.href="/order_detail.htm?orderId="+data.data.id;
+                    getSeckillResult($("#goodsId").val())
                 }else{
                     layer.msg(data.msg)
                 }

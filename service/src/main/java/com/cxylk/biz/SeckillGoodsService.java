@@ -28,5 +28,5 @@ public interface SeckillGoodsService {
      * 减库存
      * @param goodsDTO
      */
-    void reduceGoods(SeckillGoodsDTO goodsDTO);
+    boolean reduceGoods(SeckillGoodsDTO goodsDTO);
 }

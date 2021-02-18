@@ -20,4 +20,7 @@ public class GoodsKey extends BasePrefix{
 
     //商品详情key
     public static GoodsKey getGoodsDetail=new GoodsKey(60,"gd");
+
+    //商品数量key，设置为永不过期
+    public static GoodsKey getSeckillGoodsStock=new GoodsKey(0,"gs");
 }

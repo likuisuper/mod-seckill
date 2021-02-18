@@ -18,4 +18,12 @@ public interface SeckillService {
      * @return 订单
      */
     OrderInfo seckill(SeckillUser user, SeckillGoodsDTO goodsDTO);
+
+    /**
+     * 获取秒杀结果
+     * @param userId
+     * @param goodsId
+     * @return -1：失败，0：处理中，orderId：秒杀成功
+     */
+    long getSeckillResult(long userId, long goodsId);
 }

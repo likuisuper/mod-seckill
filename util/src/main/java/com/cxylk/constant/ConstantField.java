@@ -32,4 +32,6 @@ public class ConstantField {
     public static final String HEADERS_QUEUE1="headersQueue1";
 
     public static final String HEADERS_QUEUE2="headersQueue2";
+
+    public static final String SECKILL_QUEUE="seckillQueue";
 }

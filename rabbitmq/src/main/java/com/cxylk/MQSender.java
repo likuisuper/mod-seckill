@@ -24,6 +24,16 @@ public class MQSender {
     private static Logger logger = LoggerFactory.getLogger(MQSender.class);
 
     /**
+     * 秒杀消息发送实现
+     * @param seckillMessage
+     */
+    public void sendSeckillMessage(SeckillMessage seckillMessage) {
+        String message = ConvertUtil.beanToString(seckillMessage);
+        logger.info("seckill send message:"+message);
+        template.convertAndSend(ConstantField.SECKILL_QUEUE,message);
+    }
+
+    /**
      * 简单模式发送者
      *
      * @param message

@@ -14,7 +14,7 @@ public interface KeyPrefix {
     int expireSeconds();
 
     /**
-     * 获取前缀。小技巧，通过类面生成不同的前缀
+     * 获取前缀。小技巧，通过类名生成不同的前缀
      * @return
      */
     String getPrefix();

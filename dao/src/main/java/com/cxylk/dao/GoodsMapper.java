@@ -39,5 +39,5 @@ public interface GoodsMapper {
      * 减库存
      * @param goodsDTO
      */
-    void reduceGoods(SeckillGoodsDTO goodsDTO);
+    int reduceGoods(SeckillGoodsDTO goodsDTO);
 }

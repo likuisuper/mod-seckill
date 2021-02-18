@@ -1,5 +1,7 @@
 package com.cxylk.controller;
 
+import com.cxylk.MQSender;
+import com.cxylk.SeckillMessage;
 import com.cxylk.biz.SeckillGoodsService;
 import com.cxylk.biz.SeckillOrderService;
 import com.cxylk.biz.SeckillService;
@@ -11,10 +13,17 @@ import com.cxylk.po.SeckillUser;
 import com.cxylk.response.Response;
 import com.cxylk.response.ResponseResult;
 import com.cxylk.response.ResultCode;
+import com.cxylk.service.RedisService;
+import com.cxylk.service.impl.GoodsKey;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname SeckillController
@@ -25,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "SeckillController", tags = "秒杀控制层")
 @RestController
 @RequestMapping("/seckill")
-public class SeckillController {
+public class SeckillController implements InitializingBean {
     @Autowired
     private SeckillGoodsService seckillGoodsService;
 
@@ -35,6 +44,35 @@ public class SeckillController {
     @Autowired
     private SeckillService seckillService;
 
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private MQSender sender;
+
+    //本地内存标记
+    private Map<Long,Boolean> localOverMap=new HashMap<>();
+
+    /**
+     * 实现InitializingBean接口，重写该方法，bean被实例化以后立马回调该方法。
+     *
+     * @throws Exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        //系统初始化，把商品库存数量加载到redis
+        List<SeckillGoodsDTO> goodsList = seckillGoodsService.getGoodsList();
+        if (goodsList == null) {
+            return;
+        }
+        for (SeckillGoodsDTO goodsDTO : goodsList) {
+            redisService.set(GoodsKey.getSeckillGoodsStock, "" + goodsDTO.getId(), goodsDTO.getStockCount());
+            //系统初始化的时候标记该商品还没有结束秒杀
+            localOverMap.put(goodsDTO.getId(),false);
+        }
+
+    }
+
     /**
      * 优化前：QPS:450
      * linux:3000*10
@@ -42,24 +80,65 @@ public class SeckillController {
      */
     @ApiOperation(value = "秒杀实现")
     @PostMapping("/do_seckill")
-    public ResponseResult<OrderInfo> doSeckill(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+    public ResponseResult<Integer> doSeckill(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
         //如果未登录则跳转到登录界面
         if (user == null) {
-            throw  new BizException(ResultCode.SESSION_ERROR);
+            return Response.makeErrRsp(ResultCode.SESSION_ERROR);
         }
-        SeckillGoodsDTO goodsDetail = seckillGoodsService.getGoodsDetail(goodsId);
-        //1.如果秒杀商品库存<=0秒杀失败
-        if (goodsDetail.getStockCount() <= 0) {
-            throw new BizException(ResultCode.SECKILL_OVER);
+        //内存标记，减少redis访问
+        Boolean over = localOverMap.get(goodsId);
+        //如果已经结束秒杀，那么后面步骤就没有必要走了
+        if(over){
+            return Response.makeErrRsp(ResultCode.SECKILL_OVER);
         }
-        //2.库存有，判断是否存在重复秒杀
-        SeckillOrder seckillOrder = seckillOrderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
-        if (seckillOrder != null) {
-            throw new BizException(ResultCode.REPEATE_SECKILL);
+        //预减库存
+        long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsId);
+        if (stock < 0) {
+            localOverMap.put(goodsId,true);//当这里设置为true表示已经结束，后面的请求在上面发现为true后就不再执行后面步骤
+            return Response.makeErrRsp(ResultCode.SECKILL_OVER);
         }
-        //3.到这里可以正常秒杀
-        //减库存、下订单、写入秒杀订单(原子操作，使用事务)
-        OrderInfo orderInfo = seckillService.seckill(user, goodsDetail);
-        return Response.makeSuccessRsp(orderInfo);
+        //判断是否已经秒杀到了
+        SeckillOrder order = seckillOrderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
+        if (order != null) {
+            return Response.makeErrRsp(ResultCode.REPEATE_SECKILL);
+        }
+        //入队
+        SeckillMessage seckillMessage = new SeckillMessage();
+        seckillMessage.setUser(user);
+        seckillMessage.setGoodsId(goodsId);
+        sender.sendSeckillMessage(seckillMessage);
+        //返回0代表排队中,还没生成订单
+        return Response.makeSuccessRsp(0);
+
+//        SeckillGoodsDTO goodsDetail = seckillGoodsService.getGoodsDetail(goodsId);
+//        //1.如果秒杀商品库存<=0秒杀失败
+//        if (goodsDetail.getStockCount() <= 0) {
+//            throw new BizException(ResultCode.SECKILL_OVER);
+//        }
+//        //2.库存有，判断是否存在重复秒杀
+//        SeckillOrder seckillOrder = seckillOrderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
+//        if (seckillOrder != null) {
+//            throw new BizException(ResultCode.REPEATE_SECKILL);
+//        }
+//        //3.到这里可以正常秒杀
+//        //减库存、下订单、写入秒杀订单(原子操作，使用事务)
+//        OrderInfo orderInfo = seckillService.seckill(user, goodsDetail);
+//        return Response.makeSuccessRsp(orderInfo);
+    }
+
+    /**
+     * 返回orderId表示秒杀成功
+     * 返回 -1：秒杀失败
+     * 返回 0：排队中，还没处理完
+     */
+    @ApiOperation(value = "获取秒杀结果")
+    @GetMapping("/seckillResult")
+    public ResponseResult<Long> getSeckillResult(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+        //如果未登录则跳转到登录界面
+        if (user == null) {
+            return Response.makeErrRsp(ResultCode.SESSION_ERROR);
+        }
+        long result=seckillService.getSeckillResult(user.getId(),goodsId);
+        return Response.makeSuccessRsp(result);
     }
 }

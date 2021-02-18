@@ -1,13 +1,18 @@
 package com.cxylk;
 
+import com.cxylk.biz.SeckillGoodsService;
+import com.cxylk.biz.SeckillOrderService;
+import com.cxylk.biz.SeckillService;
 import com.cxylk.constant.ConstantField;
+import com.cxylk.domain.SeckillGoodsDTO;
+import com.cxylk.po.SeckillOrder;
+import com.cxylk.po.SeckillUser;
+import com.cxylk.util.ConvertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 /**
  * @Classname MQReceive
@@ -17,7 +22,39 @@ import java.util.Arrays;
  **/
 @Service
 public class MQReceiver {
+    @Autowired
+    private SeckillGoodsService seckillGoodsService;
+
+    @Autowired
+    private SeckillOrderService seckillOrderService;
+
+    @Autowired
+    private SeckillService seckillService;
+
+
     private static Logger logger = LoggerFactory.getLogger(MQReceiver.class);
+
+    @RabbitListener(queues = ConstantField.SECKILL_QUEUE)
+    public void seckillReceive(String message) {
+        logger.info("seckill receive message:" + message);
+        SeckillMessage seckillMessage = ConvertUtil.stringToBean(message, SeckillMessage.class);
+        assert seckillMessage != null;
+        SeckillUser user = seckillMessage.getUser();
+        long goodsId = seckillMessage.getGoodsId();
+        //这里可以访问数据库是因为很少有数据可以进来，已经找到了
+        SeckillGoodsDTO goodsDetail = seckillGoodsService.getGoodsDetail(goodsId);
+        int stockCount = goodsDetail.getStockCount();
+        if (stockCount <= 0) {
+            return;
+        }
+        //判断是否已经秒杀到了
+        SeckillOrder order = seckillOrderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
+        if (order != null) {
+            return;
+        }
+        //减库存，下订单，写入秒杀订单
+        seckillService.seckill(user, goodsDetail);
+    }
 
     /**
      * 简单模式下的消费者
