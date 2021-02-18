@@ -15,10 +15,13 @@ import com.cxylk.response.ResponseResult;
 import com.cxylk.response.ResultCode;
 import com.cxylk.service.RedisService;
 import com.cxylk.service.impl.GoodsKey;
+import com.cxylk.service.impl.OrderKey;
+import com.cxylk.service.impl.SeckillKey;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -74,13 +77,14 @@ public class SeckillController implements InitializingBean {
     }
 
     /**
-     * 优化前：QPS:450
-     * linux:3000*10
+     * 优化前：3000*10个请求，QPS:450
+     * 优化后：redis+mq QPS:2271
      * get是幂等的，而post是不幂等的
      */
     @ApiOperation(value = "秒杀实现")
     @PostMapping("/do_seckill")
-    public ResponseResult<Integer> doSeckill(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+    public ResponseResult<Integer> doSeckill(Model model,@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+        model.addAttribute("user",user);
         //如果未登录则跳转到登录界面
         if (user == null) {
             return Response.makeErrRsp(ResultCode.SESSION_ERROR);
@@ -140,5 +144,20 @@ public class SeckillController implements InitializingBean {
         }
         long result=seckillService.getSeckillResult(user.getId(),goodsId);
         return Response.makeSuccessRsp(result);
+    }
+
+    @ApiOperation(value = "重置redis和数据库中的数据")
+    @RequestMapping(value="/reset", method=RequestMethod.GET)
+    public ResponseResult<Boolean> reset(Model model) {
+        List<SeckillGoodsDTO> goodsList = seckillGoodsService.getGoodsList();
+        for(SeckillGoodsDTO goods : goodsList) {
+            goods.setStockCount(10);
+            redisService.set(GoodsKey.getSeckillGoodsStock, ""+goods.getId(), 10);
+            localOverMap.put(goods.getId(), false);
+        }
+        redisService.delete(OrderKey.getSeckillOrderKey);
+        redisService.delete(SeckillKey.isGoodsOver);
+        seckillService.reset(goodsList);
+        return Response.makeSuccessRsp(true);
     }
 }

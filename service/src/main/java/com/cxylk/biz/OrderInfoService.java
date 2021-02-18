@@ -22,4 +22,9 @@ public interface OrderInfoService {
 
 
     OrderInfo getOrderInfoById(long orderId);
+
+    /**
+     * 重置订单
+     */
+    void deleteOrders();
 }

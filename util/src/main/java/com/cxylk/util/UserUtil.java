@@ -99,6 +99,6 @@ public class UserUtil {
 
     public static void main(String[] args)throws Exception {
         //先启动项目然后测试生成token
-        createUser(4000);
+        createUser(5000);
     }
 }

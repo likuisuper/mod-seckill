@@ -2,6 +2,7 @@ package com.cxylk.dao;
 
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.Goods;
+import com.cxylk.po.SeckillGoods;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -37,7 +38,13 @@ public interface GoodsMapper {
 
     /**
      * 减库存
-     * @param goodsDTO
+     * @param seckillGoods
      */
-    int reduceGoods(SeckillGoodsDTO goodsDTO);
+    int reduceGoods(SeckillGoods seckillGoods);
+
+    /**
+     * 重置库存
+     * @param seckillGoods
+     */
+    void resetStock(SeckillGoods seckillGoods);
 }

@@ -6,6 +6,7 @@ import com.cxylk.dao.OrderInfoMapper;
 import com.cxylk.dao.SeckillOrderMapper;
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.OrderInfo;
+import com.cxylk.po.SeckillGoods;
 import com.cxylk.po.SeckillOrder;
 import com.cxylk.po.SeckillUser;
 import com.cxylk.service.RedisService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Classname SeckillOrderServiceImpl

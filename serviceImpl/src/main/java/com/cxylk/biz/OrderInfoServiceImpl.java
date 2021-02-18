@@ -5,6 +5,7 @@ import com.cxylk.constant.OrderStatusEnum;
 import com.cxylk.dao.OrderInfoMapper;
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.OrderInfo;
+import com.cxylk.po.SeckillGoods;
 import com.cxylk.po.SeckillOrder;
 import com.cxylk.po.SeckillUser;
 import com.cxylk.service.RedisService;
@@ -49,7 +50,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setStatus((byte) OrderStatusEnum.NO_PAY.getCode());
         orderInfo.setCreateDate(new Date());
         //保存
-        long orderId = orderInfoMapper.insert(orderInfo);
+        orderInfoMapper.insert(orderInfo);
         //生成秒杀订单
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goodsDTO.getId());
@@ -63,5 +64,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public OrderInfo getOrderInfoById(long orderId) {
         return orderInfoMapper.selectByPrimaryKey(orderId);
+    }
+
+    @Override
+    public void deleteOrders() {
+        orderInfoMapper.deleteOrders();
+        orderInfoMapper.deleteSeckillOrders();
     }
 }

@@ -33,7 +33,17 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService{
     public boolean reduceGoods(SeckillGoodsDTO goodsDTO) {
         SeckillGoods seckillGoods=new SeckillGoods();
         seckillGoods.setGoodsId(goodsDTO.getId());
-        int result = goodsMapper.reduceGoods(goodsDTO);
+        int result = goodsMapper.reduceGoods(seckillGoods);
         return result>0;
+    }
+
+    @Override
+    public void resetStock(List<SeckillGoodsDTO> goodsList) {
+        for(SeckillGoodsDTO goods : goodsList ) {
+            SeckillGoods g = new SeckillGoods();
+            g.setGoodsId(goods.getId());
+            g.setStockCount(goods.getStockCount());
+            goodsMapper.resetStock(g);
+        }
     }
 }

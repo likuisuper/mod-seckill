@@ -29,4 +29,10 @@ public interface SeckillGoodsService {
      * @param goodsDTO
      */
     boolean reduceGoods(SeckillGoodsDTO goodsDTO);
+
+    /**
+     * 重置库存
+     * @param goodsList
+     */
+    void resetStock(List<SeckillGoodsDTO> goodsList);
 }

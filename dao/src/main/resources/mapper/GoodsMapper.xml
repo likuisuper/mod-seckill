@@ -37,9 +37,13 @@
     from goods g left join seckill_goods sk on g.id=sk.goods_id where g.id=#{goodsId}
   </select>
 
-  <update id="reduceGoods" parameterType="com.cxylk.domain.SeckillGoodsDTO">
+  <update id="reduceGoods" parameterType="com.cxylk.po.SeckillGoods">
 --     为了防止库存减为负数，即发生超卖，加上stock_count>0条件
-    update seckill_goods set stock_count=stock_count-1 where goods_id=#{id} and stock_count>0
+    update seckill_goods set stock_count=stock_count-1 where goods_id=#{goodsId} and stock_count>0
+  </update>
+
+  <update id="resetStock" parameterType="com.cxylk.po.SeckillGoods">
+    update seckill_goods set stock_count = #{stockCount} where goods_id = #{goodsId}
   </update>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

@@ -4,6 +4,8 @@ import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.OrderInfo;
 import com.cxylk.po.SeckillUser;
 
+import java.util.List;
+
 /**
  * @Classname SeckillService
  * @Description 秒杀service
@@ -26,4 +28,6 @@ public interface SeckillService {
      * @return -1：失败，0：处理中，orderId：秒杀成功
      */
     long getSeckillResult(long userId, long goodsId);
+
+    void reset(List<SeckillGoodsDTO> goodsList);
 }

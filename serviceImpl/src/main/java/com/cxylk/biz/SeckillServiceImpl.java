@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @Classname SeckillServiceImpl
  * @Description 秒杀serviceImpl
@@ -27,6 +29,7 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     private SeckillOrderService seckillOrderService;
+
 
     @Autowired
     private RedisService redisService;
@@ -62,6 +65,12 @@ public class SeckillServiceImpl implements SeckillService {
                 return 0;//轮询
             }
         }
+    }
+
+    @Override
+    public void reset(List<SeckillGoodsDTO> goodsList) {
+        seckillGoodsService.resetStock(goodsList);
+        orderInfoService.deleteOrders();
     }
 
     private void setGoodsOver(Long goodsId) {
