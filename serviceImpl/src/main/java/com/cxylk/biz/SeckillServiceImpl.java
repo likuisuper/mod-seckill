@@ -7,9 +7,12 @@ import com.cxylk.po.SeckillOrder;
 import com.cxylk.po.SeckillUser;
 import com.cxylk.service.RedisService;
 import com.cxylk.service.impl.SeckillKey;
+import com.cxylk.util.MD5Util;
+import com.cxylk.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.krb5.internal.PAData;
 
 import java.util.List;
 
@@ -54,14 +57,14 @@ public class SeckillServiceImpl implements SeckillService {
     @Override
     public long getSeckillResult(long userId, long goodsId) {
         SeckillOrder seckillOrder = seckillOrderService.getOrderByUserIdGoodsId(userId, goodsId);
-        if(seckillOrder!=null){
+        if (seckillOrder != null) {
             //秒杀成功，返回订单id
             return seckillOrder.getOrderId();
-        }else{
-            boolean isOver=getGoodsOver(goodsId);
-            if(isOver){
+        } else {
+            boolean isOver = getGoodsOver(goodsId);
+            if (isOver) {
                 return -1;//说明已经卖完
-            }else {
+            } else {
                 return 0;//轮询
             }
         }
@@ -73,11 +76,30 @@ public class SeckillServiceImpl implements SeckillService {
         orderInfoService.deleteOrders();
     }
 
+    @Override
+    public String createPath(SeckillUser user, long goodsId) {
+        if (user == null || goodsId <= 0) {
+            return null;
+        }
+        String md5 = MD5Util.md5(UUIDUtil.uuid() + "123456");
+        redisService.set(SeckillKey.getSeckillPath, "" + user.getId() + "_" + goodsId, md5);
+        return md5;
+    }
+
+    @Override
+    public boolean checkPath(SeckillUser user, long goodsId, String path) {
+        if (user == null || path == null || goodsId <= 0) {
+            return false;
+        }
+        String oldPath = redisService.get(SeckillKey.getSeckillPath, "" + user.getId() + "_" + goodsId, String.class);
+        return path.equals(oldPath);
+    }
+
     private void setGoodsOver(Long goodsId) {
-        redisService.set(SeckillKey.isGoodsOver,""+goodsId,true);
+        redisService.set(SeckillKey.isGoodsOver, "" + goodsId, true);
     }
 
     private boolean getGoodsOver(long goodsId) {
-        return redisService.exists(SeckillKey.isGoodsOver,""+goodsId);
+        return redisService.exists(SeckillKey.isGoodsOver, "" + goodsId);
     }
 }

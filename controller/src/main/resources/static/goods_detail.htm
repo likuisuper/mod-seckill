@@ -49,7 +49,7 @@
 <!--                        <button class="btn btn-primary btn-block" type="submit" id="seckillBtn">立即秒杀</button>-->
 <!--                        <input type="hidden" name="goodsId" id="goodsId"/>-->
 <!--                    </form>-->
-                    <button class="btn btn-primary btn-block" type="button" id="seckillBtn" onclick="doSeckill()">立即秒杀</button>
+                    <button class="btn btn-primary btn-block" type="button" id="seckillBtn" onclick="getSeckillPath()">立即秒杀</button>
                     <input type="hidden" name="goodsId" id="goodsId"/>
                 </td>
             </tr>
@@ -69,7 +69,29 @@
     </div>
 </body>
 <script>
+    function getSeckillPath() {
+        let goodsId=$("#goodsId").val();
+        g_showLoading();
+        $.ajax({
+            url:"/seckill/path",
+            data:{
+                goodsId:goodsId,
+            },
+            type:"GET",
+            success:function (data) {
+                if(data.code==200){
+                    let path=data.data;
+                    doSeckill(path);
+                }else {
+                    layer.msg(data.msg);
+                }
+            },
+            error:function () {
+                layer.msg("客服端请求错误")
+            }
+        })
 
+    }
     function getSeckillResult(goodsId) {
         g_showLoading();
         $.ajax({
@@ -86,7 +108,7 @@
                     }else if(result==0){//继续轮询
                         setTimeout(function () {
                             getSeckillResult(goodsId)
-                        },50)
+                        },200)
                     }else{
                         swal({
                             title:"恭喜你,秒杀成功",
@@ -111,9 +133,9 @@
         })
     }
 
-    function doSeckill() {
+    function doSeckill(path) {
         $.ajax({
-            url:"/seckill/do_seckill",
+            url:"/seckill/"+path+"/do_seckill",
             data:{
                 goodsId:$("#goodsId").val(),
             },

@@ -16,6 +16,7 @@ public class ResultCode {
     public static final ResultCode FAIL = new ResultCode("400", "FAIL");
     public static final ResultCode SERVER_ERROR = new ResultCode("500100", "服务端异常");
     public static final ResultCode BIND_ERROR = new ResultCode("500101", "参数校验异常：%s");
+    public static final ResultCode ILLEGAL_REQUEST = new ResultCode("500102", "非法请求");
     public static final ResultCode DATE_FORMAT_ERROR = new ResultCode("500303", "参数格式化异常");
     //    ACCESS_LIMIT_REACHED(500104, "访问高峰期，请稍等！"),
     //登录模块 5002XX

@@ -82,12 +82,16 @@ public class SeckillController implements InitializingBean {
      * get是幂等的，而post是不幂等的
      */
     @ApiOperation(value = "秒杀实现")
-    @PostMapping("/do_seckill")
-    public ResponseResult<Integer> doSeckill(Model model,@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
-        model.addAttribute("user",user);
+    @PostMapping("/{path}/do_seckill")
+    public ResponseResult<Integer> doSeckill(@PathVariable("path") String path,@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
         //如果未登录则跳转到登录界面
         if (user == null) {
             return Response.makeErrRsp(ResultCode.SESSION_ERROR);
+        }
+        //验证path
+        boolean check=seckillService.checkPath(user,goodsId,path);
+        if(!check){
+            return Response.makeErrRsp(ResultCode.ILLEGAL_REQUEST);
         }
         //内存标记，减少redis访问
         Boolean over = localOverMap.get(goodsId);
@@ -146,9 +150,20 @@ public class SeckillController implements InitializingBean {
         return Response.makeSuccessRsp(result);
     }
 
+    @ApiOperation(value = "生成秒杀地址，用于隐藏秒杀地址")
+    @GetMapping("/path")
+    public ResponseResult<String> getSeckillPath(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+        //如果未登录则跳转到登录界面
+        if (user == null) {
+            return Response.makeErrRsp(ResultCode.SESSION_ERROR);
+        }
+        String path = seckillService.createPath(user, goodsId);
+        return Response.makeSuccessRsp(path);
+    }
+
     @ApiOperation(value = "重置redis和数据库中的数据")
     @RequestMapping(value="/reset", method=RequestMethod.GET)
-    public ResponseResult<Boolean> reset(Model model) {
+    public ResponseResult<Boolean> reset() {
         List<SeckillGoodsDTO> goodsList = seckillGoodsService.getGoodsList();
         for(SeckillGoodsDTO goods : goodsList) {
             goods.setStockCount(10);

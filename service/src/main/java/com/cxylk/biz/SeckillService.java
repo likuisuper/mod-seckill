@@ -29,5 +29,26 @@ public interface SeckillService {
      */
     long getSeckillResult(long userId, long goodsId);
 
+    /**
+     * 重置数据方便测试
+     * @param goodsList
+     */
     void reset(List<SeckillGoodsDTO> goodsList);
+
+    /**
+     * 生成秒杀路径
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    String createPath(SeckillUser user, long goodsId);
+
+    /**
+     * 后端校验path
+     * @param user
+     * @param goodsId
+     * @param path
+     * @return
+     */
+    boolean checkPath(SeckillUser user, long goodsId, String path);
 }
