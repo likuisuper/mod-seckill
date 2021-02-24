@@ -4,6 +4,7 @@ import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.OrderInfo;
 import com.cxylk.po.SeckillUser;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -51,4 +52,21 @@ public interface SeckillService {
      * @return
      */
     boolean checkPath(SeckillUser user, long goodsId, String path);
+
+    /**
+     * 生成图形验证码
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    BufferedImage createVerifyCode(SeckillUser user, long goodsId);
+
+    /**
+     * 验证图形验证码
+     * @param user
+     * @param goodsId
+     * @param verifyCode
+     * @return
+     */
+    boolean checkVerifyCode(SeckillUser user, long goodsId, int verifyCode);
 }

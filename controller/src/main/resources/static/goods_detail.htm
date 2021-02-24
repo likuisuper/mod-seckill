@@ -49,7 +49,13 @@
 <!--                        <button class="btn btn-primary btn-block" type="submit" id="seckillBtn">立即秒杀</button>-->
 <!--                        <input type="hidden" name="goodsId" id="goodsId"/>-->
 <!--                    </form>-->
-                    <button class="btn btn-primary btn-block" type="button" id="seckillBtn" onclick="getSeckillPath()">立即秒杀</button>
+                    <div class="row">
+                        <div class="form-inline">
+                        <img id="verifyCodeImg" width="100" height="33" style="display: none" onclick="refreshVerifyCode()"/>
+                        <input id="verifyCode" class="form-control" style="display: none"/>
+                        <button class="btn btn-primary" type="button" id="seckillBtn" onclick="getSeckillPath()">立即秒杀</button>
+                        </div>
+                    </div>
                     <input type="hidden" name="goodsId" id="goodsId"/>
                 </td>
             </tr>
@@ -74,10 +80,11 @@
         g_showLoading();
         $.ajax({
             url:"/seckill/path",
+            type:"GET",
             data:{
                 goodsId:goodsId,
+                verifyCode:$("#verifyCode").val()
             },
-            type:"GET",
             success:function (data) {
                 if(data.code==200){
                     let path=data.data;
@@ -218,10 +225,18 @@
                 clearTimeout(timeOut);
             }
             $("#seckillTip").html("秒杀进行中");
+            $("#verifyCodeImg").attr("src","/seckill/verifyCode?goodsId="+$("#goodsId").val());
+            $("#verifyCodeImg").show();
+            $("#verifyCode").show();
         }else{//秒杀已结束
             $("#seckillBtn").attr("disabled",true);
             $("#seckillTip").html("秒杀已结束");
         }
+    }
+
+    function refreshVerifyCode() {
+        //由于浏览器是有缓存的，所有要加上一个时间戳参数
+        $("#verifyCodeImg").attr("src","/seckill/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
     }
 </script>
 </html>

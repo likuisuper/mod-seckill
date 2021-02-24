@@ -1,5 +1,7 @@
 package com.cxylk.service.impl;
 
+import com.cxylk.service.KeyPrefix;
+
 /**
  * @Classname SeckillKey
  * @Description TODO
@@ -7,7 +9,8 @@ package com.cxylk.service.impl;
  * @Date 2021/2/17 16:35
  **/
 public class SeckillKey extends BasePrefix{
-    public SeckillKey(int expireSeconds,String prefix) {
+
+    public SeckillKey(int expireSeconds, String prefix) {
         super(expireSeconds,prefix);
     }
 
@@ -16,4 +19,6 @@ public class SeckillKey extends BasePrefix{
 
     //秒杀地址key
     public static SeckillKey getSeckillPath=new SeckillKey(60,"sp");
+
+    public static SeckillKey getSeckillVerifyCode=new SeckillKey(300,"vc");
 }
