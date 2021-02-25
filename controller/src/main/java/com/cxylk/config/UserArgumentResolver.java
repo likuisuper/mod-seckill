@@ -1,5 +1,6 @@
 package com.cxylk.config;
 
+import com.cxylk.access.UserContext;
 import com.cxylk.biz.SeckillUserService;
 import com.cxylk.constant.ConstantField;
 import com.cxylk.po.SeckillUser;
@@ -51,38 +52,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
      */
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        //获取request请求
-        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        //获取response,为了延迟分布式session的有效期
-        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
-        //获取参数中的token，防止出现token没有放在cookie而是放在请求头的情况
-        String parameterToken = request.getParameter(ConstantField.COOKIE_NAME_TOKEN);
-        //获取cookie中的token
-        String cookieToken=getCookieValue(request,ConstantField.COOKIE_NAME_TOKEN);
-        if(ComUtil.isEmpty(cookieToken)&&ComUtil.isEmpty(parameterToken)){
-            return null;
-        }
-        //参数中的token不为空就从参数中获取，不然从cookie中获取
-        String token=ComUtil.isEmpty(parameterToken)?cookieToken:parameterToken;
-        return seckillUserService.getByToken(response,token);
+        //因为是先走拦截器再走参数，而在拦截器里面已经获取user并保存了，所以这里直接获取
+        return UserContext.getUser();
     }
 
-    /**
-     * 获取cookie中的值
-     * @param request
-     * @param cookieName
-     * @return
-     */
-    private String getCookieValue(HttpServletRequest request,String cookieName){
-        Cookie[] cookies = request.getCookies();
-        if(ComUtil.isEmpty(cookies)){
-            return null;
-        }
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals(cookieName)){
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
 }

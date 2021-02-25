@@ -2,6 +2,7 @@ package com.cxylk.controller;
 
 import com.cxylk.MQSender;
 import com.cxylk.SeckillMessage;
+import com.cxylk.access.AccessLimit;
 import com.cxylk.biz.SeckillGoodsService;
 import com.cxylk.biz.SeckillOrderService;
 import com.cxylk.biz.SeckillService;
@@ -14,6 +15,7 @@ import com.cxylk.response.Response;
 import com.cxylk.response.ResponseResult;
 import com.cxylk.response.ResultCode;
 import com.cxylk.service.RedisService;
+import com.cxylk.service.impl.AccessKey;
 import com.cxylk.service.impl.GoodsKey;
 import com.cxylk.service.impl.OrderKey;
 import com.cxylk.service.impl.SeckillKey;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -157,8 +160,9 @@ public class SeckillController implements InitializingBean {
 
     @ApiOperation(value = "生成秒杀地址，用于隐藏真实的秒杀地址")
     @GetMapping("/path")
-    public ResponseResult<String> getSeckillPath(SeckillUser user, @RequestParam("goodsId") long goodsId,
-                                                 @RequestParam("verifyCode") int verifyCode) throws BizException {
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
+    public ResponseResult<String> getSeckillPath(SeckillUser user, HttpServletRequest request, @RequestParam("goodsId") long goodsId,
+                                                 @RequestParam(value = "verifyCode", defaultValue = "0") int verifyCode) throws BizException {
         //如果未登录则跳转到登录界面
         if (user == null) {
             return Response.makeErrRsp(ResultCode.SESSION_ERROR);

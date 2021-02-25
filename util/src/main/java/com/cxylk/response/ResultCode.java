@@ -18,7 +18,7 @@ public class ResultCode {
     public static final ResultCode BIND_ERROR = new ResultCode("500101", "参数校验异常：%s");
     public static final ResultCode ILLEGAL_REQUEST = new ResultCode("500102", "非法请求");
     public static final ResultCode DATE_FORMAT_ERROR = new ResultCode("500303", "参数格式化异常");
-    //    ACCESS_LIMIT_REACHED(500104, "访问高峰期，请稍等！"),
+    public static final ResultCode ACCESS_LIMIT_REACHED=new ResultCode("500104", "访问太频繁！");
     //登录模块 5002XX
     public static final ResultCode MOBILE_NOT_EXIST = new ResultCode("500214", "用户不存在");
     public static final ResultCode MOBILE_EMPTY = new ResultCode("500212", "手机号不能为空");
