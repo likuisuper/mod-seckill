@@ -1,6 +1,7 @@
 package com.cxylk.service;
 
 import com.cxylk.exception.BizException;
+import redis.clients.jedis.Jedis;
 
 /**
  * @Classname RedisService
@@ -67,4 +68,10 @@ public interface RedisService {
      * @return 减一后的值
      */
     long decr(KeyPrefix prefix,String key);
+
+    /**
+     * 将连接返回连接池
+     * @param jedis
+     */
+    void returnToPool(Jedis jedis);
 }

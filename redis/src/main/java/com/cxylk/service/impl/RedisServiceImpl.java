@@ -1,6 +1,5 @@
 package com.cxylk.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cxylk.service.KeyPrefix;
 import com.cxylk.service.RedisService;
 import com.cxylk.util.ComUtil;
@@ -135,7 +134,7 @@ public class RedisServiceImpl implements RedisService {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            List<String> keys = new ArrayList<String>();
+            List<String> keys = new ArrayList<>();
             String cursor = "0";
             ScanParams sp = new ScanParams();
             sp.match("*"+key+"*");
@@ -186,7 +185,7 @@ public class RedisServiceImpl implements RedisService {
      *
      * @param jedis
      */
-    private void returnToPool(Jedis jedis) {
+    public void returnToPool(Jedis jedis) {
         if (jedis != null) {
             //并不会关闭，而是返回连接池
             jedis.close();

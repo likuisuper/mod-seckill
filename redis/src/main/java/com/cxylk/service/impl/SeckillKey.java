@@ -20,5 +20,5 @@ public class SeckillKey extends BasePrefix{
     //秒杀地址key
     public static SeckillKey getSeckillPath=new SeckillKey(60,"sp");
 
-    public static SeckillKey getSeckillVerifyCode=new SeckillKey(300,"vc");
+    public static SeckillKey getSeckillVerifyCode=new SeckillKey(100,"vc");
 }

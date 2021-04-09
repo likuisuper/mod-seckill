@@ -87,20 +87,21 @@ public class SeckillController implements InitializingBean {
     /**
      * 优化前：3000*10个请求，QPS:450
      * 优化后：redis+mq QPS:2271
+     * nginx负载均衡，6000*10:2359
      * get是幂等的，而post是不幂等的
      */
     @ApiOperation(value = "秒杀实现")
-    @PostMapping("/{path}/do_seckill")
-    public ResponseResult<Integer> doSeckill(@PathVariable("path") String path, @RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
+    @PostMapping("/do_seckill")
+    public ResponseResult<Integer> doSeckill(@RequestParam("goodsId") long goodsId, SeckillUser user) throws BizException {
         //如果未登录则跳转到登录界面
         if (user == null) {
             return Response.makeErrRsp(ResultCode.SESSION_ERROR);
         }
         //验证path
-        boolean check = seckillService.checkPath(user, goodsId, path);
-        if (!check) {
-            return Response.makeErrRsp(ResultCode.ILLEGAL_REQUEST);
-        }
+//        boolean check = seckillService.checkPath(user, goodsId, path);
+//        if (!check) {
+//            return Response.makeErrRsp(ResultCode.ILLEGAL_REQUEST);
+//        }
         //内存标记，减少redis访问
         Boolean over = localOverMap.get(goodsId);
         //如果已经结束秒杀，那么后面步骤就没有必要走了
