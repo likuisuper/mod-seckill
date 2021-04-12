@@ -12,7 +12,8 @@ public enum OrderStatusEnum {
     ALREADY_SEND(2,"已发货"),
     ALREADY_RECEIVE(3,"已收货"),
     ALREADY_BACK(4,"已退款"),
-    ALREADY_SUCCESS(5,"已完成");
+    ALREADY_SUCCESS(5,"已完成"),
+    NOT_COMPLETED(6,"未完成");
 
     private int code;
     private String msg;

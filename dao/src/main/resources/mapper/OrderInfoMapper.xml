@@ -123,7 +123,7 @@
       <if test="deliveryAddrId != null">
         delivery_addr_id = #{deliveryAddrId,jdbcType=BIGINT},
       </if>
-      <if test="goodsName != null">
+      <if test="goodsName != null and goodsName != ''">
         goods_name = #{goodsName,jdbcType=VARCHAR},
       </if>
       <if test="goodsCount != null">

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @Author likui
  * @Date 2021/2/7 17:30
  **/
-@Api(value = "OrderInfoController",tags = "商品接口")
+@Api(value = "OrderInfoController",tags = "订单接口")
 @RestController
 @RequestMapping("/order")
 public class OrderInfoController {
@@ -48,5 +48,16 @@ public class OrderInfoController {
         orderDetailVO.setOrderInfo(orderInfo);
         orderDetailVO.setSeckillUser(user);
         return Response.makeSuccessRsp(orderDetailVO);
+    }
+
+    @ApiOperation(value = "手动取消订单")
+    @PostMapping("/cancel")
+    public ResponseResult<Object> cancelOrder(@RequestParam("orderId") long orderId){
+        //判断用户是否存在或者session是否过期
+//        if(user==null){
+//            return Response.makeErrRsp(ResultCode.SESSION_ERROR);
+//        }
+        orderInfoService.cancelOrder(orderId);
+        return Response.makeSuccessRsp();
     }
 }

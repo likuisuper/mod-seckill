@@ -20,6 +20,12 @@ public interface OrderInfoService {
      */
     OrderInfo createOrder(SeckillUser user, SeckillGoodsDTO goodsDTO);
 
+    /**
+     * 取消订单
+     * @param orderId
+     */
+    void cancelOrder(Long orderId);
+
 
     OrderInfo getOrderInfoById(long orderId);
 

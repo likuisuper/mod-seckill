@@ -1,0 +1,53 @@
+version: '3'
+services:
+  # 指定服务名称
+  db:
+    # 指定服务使用的镜像
+    image: mysql:8.0
+    # 指定容器名称
+    container_name: mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # 开机启动
+    restart: always
+    # 指定服务运行端口
+    ports:
+    - 3306:3306
+    # 指定容器挂载文件
+    volumes:
+    - /lkuse/mysql/conf:/etc/mysql/conf.d
+    - /lkuse/mysql/data:/var/lib/mysql
+    - /lkuse/mysql/log:/var/log/mysql
+    # 指定容器的环境变量，即设置密码
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+  redis:
+    image: redis:5.0.5
+    container_name: redis
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass 12345 --appendonly yes
+    ports:
+    - 7369:6379
+    volumes:
+    - /lkuse/myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+    - /lkuse/myredis/data:/data
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+    - /lkuse/rabbitmq/data:/var/lib/rabbitmq #数据文件挂载
+    - /lkuse/rabbitmq/log:/var/log/rabbitmq #日志文件挂载
+  seckill-docker-file:
+    image: seckill-docker-file:0.0.1-SHAPSHOT
+    container_name: seckill-docker-file
+    # 下面三个服务启动后再启动该服务
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    ports:
+    - 8080:8080
+    volumes:
+    - /etc/localtime:/etc/localtime
+    - /lkuse/app/seckill-docker-file/logs:/var/logs

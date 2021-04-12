@@ -35,5 +35,7 @@ public class ConstantField {
 
     public static final String SECKILL_QUEUE="seckillQueue";
 
+    public static final String ORDER_CANCEL_PLUGIN="seckill.order.cancel.plugin";
+
     public static final String LOGIN_COUNT="count:login";
 }
