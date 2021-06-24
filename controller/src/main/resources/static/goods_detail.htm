@@ -53,7 +53,8 @@
                         <div class="form-inline">
                         <img id="verifyCodeImg" width="100" height="33" style="display: none" onclick="refreshVerifyCode()"/>
                         <input id="verifyCode" class="form-control" style="display: none"/>
-                        <button class="btn btn-primary" type="button" id="seckillBtn" onclick="doSeckill()">立即秒杀</button>
+                        <button class="btn btn-primary" type="button" id="seckillBtn" onclick="getSeckillPath()">立即秒杀</button>
+<!--                        <button class="btn btn-primary" type="button" id="seckillBtn" onclick="doSeckill()">立即秒杀</button>-->
                         </div>
                     </div>
                     <input type="hidden" name="goodsId" id="goodsId"/>
@@ -140,10 +141,10 @@
         })
     }
 
-    function doSeckill() {
+    function doSeckill(path) {
         $.ajax({
-            // url:"/seckill/"+path+"/do_seckill",
-            url:"/seckill/do_seckill",
+            url:"/seckill/"+path+"/do_seckill",
+            // url:"/seckill/do_seckill",
             data:{
                 goodsId:$("#goodsId").val(),
             },

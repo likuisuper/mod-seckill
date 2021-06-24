@@ -2,7 +2,6 @@ package com.cxylk.biz;
 
 import com.cxylk.domain.SeckillGoodsDTO;
 import com.cxylk.po.OrderInfo;
-import com.cxylk.po.SeckillGoods;
 import com.cxylk.po.SeckillOrder;
 import com.cxylk.po.SeckillUser;
 import com.cxylk.service.RedisService;
@@ -12,7 +11,6 @@ import com.cxylk.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.krb5.internal.PAData;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

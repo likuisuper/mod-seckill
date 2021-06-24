@@ -51,7 +51,7 @@
         </tr>
         <tr>
             <td>收货地址</td>
-            <td colspan="2">江苏省苏州市慧湖大厦嘉图网络科技有限公司</td>
+            <td colspan="2">江苏省苏州市慧湖大厦嘉图网络科技股份有限公司</td>
         </tr>
     </table>
 </div>
@@ -85,12 +85,13 @@
     function render(detail) {
         let goods=detail.goodsDTO;
         let order=detail.orderInfo;
+        console.log(order.status);
         let user=detail.seckillUser;
         $("#goodsName").text(goods.goodsName);
         $("#goodsImage").attr("src",goods.goodsImg);
         $("#goodsPrice").text(order.goodsPrice);
         $("#orderTime").text(new Date(order.createDate).format("yyyy-MM-dd hh:mm:ss"));
-        let orderStatus="";
+        let orderStatus;
         if(order.status==0){
             orderStatus="未支付";
         }else if(order.status==1){
